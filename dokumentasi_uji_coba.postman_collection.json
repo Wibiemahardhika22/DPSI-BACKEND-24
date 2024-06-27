@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "6b4fc1e4-6730-4eb7-ab62-d41d0cbde1fe",
-		"name": "Modul DPSI",
+		"name": "Modul DPSI2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28432327"
 	},
@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin\", \r\n    \"password\": \"123\", \r\n    \"role\": \"admin\"\r\n}",
+							"raw": "{\r\n    \"username\": \"user\", \r\n    \"password\": \"123\", \r\n    \"role\": \"user\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -237,12 +237,26 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/customers",
+							"raw": "{{baseURL}}/customers?page=0&limit=5&search=Sari",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"customers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "Sari"
+								}
 							]
 						}
 					},
@@ -361,13 +375,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/employee/",
+							"raw": "{{baseURL}}/employee/?page=0&limit=5&search=a",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"employee",
 								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "a"
+								}
 							]
 						}
 					},
@@ -600,12 +628,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/shipper",
+							"raw": "{{baseURL}}/shipper/?page=0&limit=5&search=pt",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
-								"shipper"
+								"shipper",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "pt"
+								}
 							]
 						}
 					},
@@ -714,13 +757,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/supplier/",
+							"raw": "{{baseURL}}/supplier/?page=0&limit=5&search=Sejahtera",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"supplier",
 								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "Sejahtera"
+								}
 							]
 						}
 					},
@@ -839,13 +896,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/products/",
+							"raw": "{{baseURL}}/products/?page=0&limit=5&search=kemeja",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"products",
 								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "kemeja"
+								}
 							]
 						}
 					},
@@ -956,6 +1027,38 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/?page=0&limit=5&search=admin",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "admin"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -965,7 +1068,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzE4NDU0MDU1LCJleHAiOjE3MTg0NTc2NTV9.KxsV-7Aguq1v1QtGJiX7nEBHfV-qKwefNqhdikf3DLQ",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzE5NDY1MTc3LCJleHAiOjE3MTk0Njg3Nzd9.4xNndwBvV1TUczDJS4KKDkBj_kO84DBQ97MofhrfR6E",
 				"type": "string"
 			}
 		]

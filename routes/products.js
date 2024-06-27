@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const Product = require('../models/product'); // Impor model Product
 const { authenticate, authorize } = require('../middleware/auth');
 
@@ -20,8 +21,42 @@ router.post('/', authenticate, authorize(['admin']), async (req, res, next) => {
 // Endpoint untuk menampilkan semua produk
 router.get('/', authenticate, async (req, res, next) => {
     try {
-        const products = await Product.findAll();
-        res.json(products);
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || "";
+        const offset = page * limit;
+
+        const whereClause = {
+            [Op.or]: [{
+                productName: {
+                    [Op.like]: '%' + search + '%'
+                }
+            }]
+        };
+
+        const totalRows = await Product.count({ where: whereClause });
+        const totalPages = Math.ceil(totalRows / limit);
+
+        if (totalRows === 0) {
+            return res.json({
+                message: 'Tidak ada data',
+            });
+        }
+
+        const result = await Product.findAll({
+            where: whereClause,
+            offset: offset,
+            limit: limit,
+            order: [['productID', 'DESC']]
+        });
+
+        res.json({
+            page,
+            limit,
+            totalRows,
+            totalPages,
+            result,
+        });
     } catch (err) {
         next(err);
     }

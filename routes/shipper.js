@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const Shipper = require('../models/shipper');
 
 router.post('/', async (req, res, next) => {
@@ -16,8 +17,42 @@ router.post('/', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        const shipper = await Shipper.findAll();
-        res.json(shipper);
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || "";
+        const offset = page * limit;
+
+        const whereClause = {
+            [Op.or]: [{
+                shipperName: {
+                    [Op.like]: '%' + search + '%'
+                }
+            }]
+        };
+
+        const totalRows = await Shipper.count({ where: whereClause });
+        const totalPages = Math.ceil(totalRows / limit);
+
+        if (totalRows === 0) {
+            return res.json({
+                message: 'Tidak ada data',
+            });
+        }
+
+        const result = await Shipper.findAll({
+            where: whereClause,
+            offset: offset,
+            limit: limit,
+            order: [['shipperID', 'DESC']]
+        });
+
+        res.json({
+            page,
+            limit,
+            totalRows,
+            totalPages,
+            result,
+        });
     } catch (err) {
         next(err);
     }

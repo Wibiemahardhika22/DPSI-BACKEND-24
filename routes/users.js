@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const User = require('../models/user');
 const upload = require('../middleware/upload');
 const { authenticate } = require('../middleware/auth');
@@ -39,6 +40,50 @@ router.get('/profilePic/:id', async (req, res, next) => {
     // Konstruksi path lengkap ke gambar
     const imagePath = path.join(__dirname, '..', user.profilePic);
     res.sendFile(imagePath);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Endpoint untuk mendapatkan data user
+router.get('/', async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || "";
+    const offset = page * limit;
+
+    const whereClause = {
+      [Op.or]: [{
+        username: {
+          [Op.like]: '%' + search + '%'
+        }
+      }]
+    };
+
+    const totalRows = await User.count({ where: whereClause });
+    const totalPages = Math.ceil(totalRows / limit);
+
+    if (totalRows === 0) {
+      return res.json({
+        message: 'Tidak ada data',
+      });
+    }
+
+    const result = await User.findAll({
+      where: whereClause,
+      offset: offset,
+      limit: limit,
+      order: [['id', 'DESC']]
+    });
+
+    res.json({
+      page,
+      limit,
+      totalRows,
+      totalPages,
+      result,
+    });
   } catch (err) {
     next(err);
   }

@@ -1,4 +1,5 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const router = express.Router();
 const Customer = require('../models/customer');
 
@@ -21,8 +22,46 @@ router.post('/', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        const customers = await Customer.findAll();
-        res.json(customers);
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || "";
+        const offset = page * limit;
+
+        const whereClause = {
+            [Op.or]: [{
+                customerName: {
+                    [Op.like]: '%' + search + '%'
+                }
+            }, {
+                contactName: {
+                    [Op.like]: '%' + search + '%'
+                }
+            }]
+        };
+
+        const totalRows = await Customer.count({ where: whereClause });
+        const totalPages = Math.ceil(totalRows / limit);
+
+        if (totalRows === 0) {
+            return res.json({
+                message: 'Tidak ada data',
+            });
+        }
+
+        const result = await Customer.findAll({
+            where: whereClause,
+            offset: offset,
+            limit: limit,
+            order: [['customerID', 'DESC']]
+        });
+
+        res.json({
+            page,
+            limit,
+            totalRows,
+            totalPages,
+            result,
+        });
     } catch (err) {
         next(err);
     }
